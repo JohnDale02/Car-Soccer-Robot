@@ -16,9 +16,10 @@ class PS4Controller(Controller):
 
         # pwm
         self.l_paddle_pin = 12 # set to whatever the left bumper pin is
-        self.r_paddle_pin = 14 # set to whatever the right bumper pin is
-        self.l_pi_pwm = GPIO.PWM(self.l_paddle_pin,1000) #create PWM instance with frequency
-        self.r_pi_pwm = GPIO.PWM(self.r_paddle_pin,1000) #create PWM instance with frequency
+        self.r_paddle_pin = 13 # set to whatever the right bumper pin is
+        self.pwm_feq = 100 # set desired frequency, range [10-150Hz]
+        self.l_pi_pwm = GPIO.PWM(self.l_paddle_pin, self.pwm_feq) #create PWM instance with frequency
+        self.r_pi_pwm = GPIO.PWM(self.r_paddle_pin, self.pwm_feq) #create PWM instance with frequency
 
     
     # ROS callbacks
