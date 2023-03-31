@@ -3,38 +3,33 @@ from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 
+import termios
+import tty
+
+from ps4_controller import PS4Controller
 
 class CreateControllerPub(Node):
 
     def __init__(self):
         super().__init__('create_controller_pub')
-        self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 10)
-        timer_period = 0.5  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.i = 0
+        self.publisher = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.twist_msg = Twist()
+        self.controller = PS4Controller(interface="/dev/input/js0", connecting_using_ds4drv=False)
+        
+    def publish_msg(self, drive, turn):
+        self.twist_msg.linear.x = drive
+        self.twist_msg.angular.z = turn
+        self.publisher.publish(msg)
+    
 
-    def timer_callback(self):
-        msg = Twist()
-        msg.linear.x = 1.0
-        msg.angular.z = 1.0
-        self.publisher_.publish(msg)
-        self.get_logger().info(f"Publishing: {msg}")
-        self.i += 1
-
-
-def main(args=None):
-    rclpy.init(args=args)
-
+def main():
+    rclpy.init()
     create_controller_pub = CreateControllerPub()
-
     rclpy.spin(create_controller_pub)
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     minimal_publisher.destroy_node()
     rclpy.shutdown()
-
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

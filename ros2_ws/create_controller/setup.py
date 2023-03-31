@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'create_controller = create_controller.create_controller:main'
+            'ps4_controller = ps4_controller.ps4_controller:main'
         ],
     },
 )
