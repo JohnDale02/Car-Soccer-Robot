@@ -1,0 +1,4 @@
+[submodule "ros2_ws/irobot_create_msgs"]
+	path = ros2_ws/irobot_create_msgs
+	url = https://github.com/iRobotEducation/irobot_create_msgs.git
+    branch = galactic
