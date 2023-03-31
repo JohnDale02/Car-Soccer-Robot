@@ -1,10 +1,12 @@
 # Create controller
 
-## Intall, build, and run
+## Build and run
 ```bash
-cd Car-Soccer-Robot
-git submodule update --init
-cd ros2_ws
+# Build
+cd Car-Soccer-Robot/ros2_ws
 colcon build
+source install/setup.bash
+
+# Run
 ros2 run create_controller create_controller
 ```
