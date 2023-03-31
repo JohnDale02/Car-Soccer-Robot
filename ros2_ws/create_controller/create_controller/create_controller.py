@@ -19,13 +19,7 @@ class CreateControllerPub(Node):
         self.led_msg = LightringLeds()
 
         self.controller = controller
-
-        self.timer = self.create_timer(1, self.timer_callback)
-
-    def timer_callback(self):
-        self.publish_led()
-        self.publish_twist_msg(1.0,2.0)
-
+        
     def start_up_controller(self):
         self.controller.register_cmd_vel_pub_cb(self.publish_twist_msg)
         self.controller.register_cmd_led_pub_cb(self.publish_led)
