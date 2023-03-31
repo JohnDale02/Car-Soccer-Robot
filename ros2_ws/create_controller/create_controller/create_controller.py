@@ -10,19 +10,22 @@ from .ps4_controller import PS4Controller
 class CreateControllerPub(Node):
     def __init__(self, controller):
         super().__init__("create_controller_pub")
-        self.publisher = self.create_publisher(Twist, "cmd_vel", 10)
+        self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.twist_msg = Twist()
         self.controller = controller
-        self.controller.register_cmd_vel_pub_cb(self.publish_msg)
         
     def start_up_controller(self):
+        self.controller.register_cmd_vel_pub_cb(self.publish_twist_msg)
         self.ct = threading.Thread(target=self.controller.spin_controller)
         self.ct.run()
     
-    def publish_msg(self, drive, turn):
+    def publish_twist_msg(self, drive, turn):
         self.twist_msg.linear.x = drive
         self.twist_msg.angular.z = turn
-        self.publisher.publish(msg)
+        self.twist_publisher.publish(self.twist_msg)
+    
+    def publish_led(self):
+
 
 
 def main():
