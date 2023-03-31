@@ -6,25 +6,31 @@ from rclpy.node import Node
 
 from .ps4_controller import PS4Controller
 from geometry_msgs.msg import Twist
-from irobot_create_msgs import LightringLeds
-from irobot_create_msgs import LedColor
+from irobot_create_msgs.msg import LightringLeds
+from irobot_create_msgs.msg import LedColor
 
 class CreateControllerPub(Node):
     def __init__(self, controller):
         super().__init__("create_controller_pub")
-        self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 30)
-        self.led_publisher = self.create_publisher(LightringLeds, "cmd_lightring")
+        self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
+        self.led_publisher = self.create_publisher(LightringLeds, "cmd_lightring", 10)
         
         self.twist_msg = Twist()
         self.led_msg = LightringLeds()
 
         self.controller = controller
-        
+
+        self.timer = self.create_timer(1, self.timer_callback)
+
+    def timer_callback(self):
+        self.publish_led()
+        self.publish_twist_msg(1.0,2.0)
+
     def start_up_controller(self):
         self.controller.register_cmd_vel_pub_cb(self.publish_twist_msg)
         self.controller.register_cmd_led_pub_cb(self.publish_led)
         self.ct = threading.Thread(target=self.controller.spin_controller)
-        self.ct.run()
+        self.ct.start()
     
     def publish_twist_msg(self, drive, turn):
         self.twist_msg.linear.x = drive
