@@ -52,7 +52,7 @@ class PS4Controller(Controller):
     
     # Mapping
     def map_movement(self,value):  # function that maps raw joystick data  --> create angle
-        return value // 100
+        return (value / 328) * 0.46
 
     def map_motor(self,value):
         return value // 100
