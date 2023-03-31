@@ -17,6 +17,8 @@ class CreateControllerPub(Node):
         
         self.twist_msg = Twist()
         self.led_msg = LightringLeds()
+        
+        self.led_msg.override_system = True
 
         self.controller = controller
         

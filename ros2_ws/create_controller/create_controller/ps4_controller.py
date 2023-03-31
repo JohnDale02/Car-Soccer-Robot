@@ -41,11 +41,11 @@ class PS4Controller(Controller):
     def on_R2_press(self, value):
         self.send_pwm_right(value)
 
-    def on_L3_y_at_rest(self):
-        self.move_robot_Y(0)
+    # def on_L3_y_at_rest(self):
+    #     self.move_robot_Y(0)
 
-    def on_R3_x_at_rest(self):
-        self.move_robot_X(0)
+    # def on_R3_x_at_rest(self):
+    #     self.move_robot_X(0)
     
     def on_x_press(self):
         self.cmd_led_pub_cb()
