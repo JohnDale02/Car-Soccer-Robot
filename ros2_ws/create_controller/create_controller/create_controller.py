@@ -54,7 +54,7 @@ def main():
     create_controller_pub.start_up_controller()
     rclpy.spin(create_controller_pub)
 
-    minimal_publisher.destroy_node()
+    create_controller_pub.destroy_node()
     rclpy.shutdown()
 
 
