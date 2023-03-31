@@ -8,6 +8,7 @@ from .ps4_controller import PS4Controller
 from geometry_msgs.msg import Twist
 from irobot_create_msgs.msg import LightringLeds
 from irobot_create_msgs.msg import LedColor
+from irobot_create_msgs.msg import HazardDetection
 
 import math, time
 
@@ -16,7 +17,9 @@ class CreateControllerPub(Node):
         super().__init__("create_controller_pub")
         self.twist_publisher = self.create_publisher(Twist, "cmd_vel", 10)
         self.led_publisher = self.create_publisher(LightringLeds, "cmd_lightring", 10)
-        
+        self.hazard_subscriber = self.create_subscription(HazardDetection, 'hazard_detection', self.hazard_detect_cb, 10)
+        self.hazard_subscriber # prevent unused variable warning
+
         self.run_rainbow = False
         self.rainbow_thread = None
 
@@ -69,6 +72,9 @@ class CreateControllerPub(Node):
 
     def publish_led(self):
         self.led_publisher.publish(self.led_msg)
+
+    def hazard_detect_cb(self, msg):
+        print(f"Hazard detected: {msg.type}") #https://github.com/iRobotEducation/irobot_create_msgs/blob/rolling/msg/HazardDetection.msg
 
 
 def main():
