@@ -4,12 +4,16 @@ class PS4Controller(Controller):
     def __init__(self, **kwargs):
         Controller.__init__(self, **kwargs)
         self.cmd_vel_pub_cb = None
+        self.cmd_led_pub_cb = None
         self.x = 0
         self.y = 0
     
     # ROS callbacks
     def register_cmd_vel_pub_cb(self, callback_func):
         self.cmd_vel_pub_cb = callback_func
+    
+    def register_cmd_led_pub_cb(self, callback_func):
+        self.cmd_led_pub_cb = callback_func
 
     def pub_movement(self):
         self.cmd_vel_pub_cb(self.y, self.x)
@@ -42,6 +46,9 @@ class PS4Controller(Controller):
 
     def on_R3_x_at_rest(self):
         self.move_robot_X(0)
+    
+    def on_x_press(self):
+        self.cmd_led_pub_cb()
     
     # Mapping
     def map_movement(self,value):  # function that maps raw joystick data  --> create angle
