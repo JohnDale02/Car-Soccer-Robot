@@ -27,8 +27,8 @@ class CreateControllerPub(Node):
         self.ct.start()
     
     def publish_twist_msg(self, drive, turn):
-        self.twist_msg.linear.x = drive
-        self.twist_msg.angular.z = turn
+        self.twist_msg.linear.x = float(drive)
+        self.twist_msg.angular.z = float(turn)
         self.twist_publisher.publish(self.twist_msg)
     
     def publish_led(self):
