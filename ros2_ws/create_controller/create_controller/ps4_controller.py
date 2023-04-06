@@ -63,11 +63,11 @@ class PS4Controller(Controller):
         print(f"R2 Raw: {value}")
         self.send_pwm_right(value)
     
-    def on_R2_release(self, value):
-        GPIO.set_PWM_dutycycle(self.r_paddle_pin, value)
+    def on_R2_release(self):
+        GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
 
-    def on_L2_release(self, value):
-        GPIO.set_PWM_dutycycle(self.l_paddle_pin, value)
+    def on_L2_release(self):
+        GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
 
     # def on_L3_y_at_rest(self):
     #     self.move_robot_Y(0)
