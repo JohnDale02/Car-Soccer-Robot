@@ -74,10 +74,10 @@ class PS4Controller(Controller):
         GPIO.set_mode(self.l_paddle_pin, pigpio.INPUT)
         print("L1 Release: ", self.IOLEFT)
         if self.IOLEFT == 0:
-            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 190)
+            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 170)
             self.IOLEFT = 1
         elif self.IOLEFT == 1:
-            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 190)
+            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 170)
             self.IOLEFT = 0
         print(self.IOLEFT)
 
