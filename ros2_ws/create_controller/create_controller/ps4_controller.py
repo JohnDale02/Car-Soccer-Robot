@@ -4,7 +4,6 @@ import time
 
 GPIO.setwarnings(False)			#disable warnings
 GPIO.setmode(GPIO.BOARD)		#set pin numbering system
-GPIO.setup(ledpin,GPIO.OUT)
 
 class PS4Controller(Controller):
     def __init__(self, **kwargs):
@@ -13,10 +12,14 @@ class PS4Controller(Controller):
         self.cmd_led_pub_cb = None
         self.x = 0
         self.y = 0
+        self.pwm_feq = 150
 
-        # pwm
         self.l_paddle_pin = 12 # set to whatever the left bumper pin is
         self.r_paddle_pin = 13 # set to whatever the right bumper pin is
+
+        GPIO.setup(self.l_paddle_pin,GPIO.OUT)
+        GPIO.setup(self.r_paddle_pin, GPIO.OUT)
+        # pwm
         self.pwm_feq = 100 # set desired frequency, range [10-150Hz]
         self.l_pi_pwm = GPIO.PWM(self.l_paddle_pin, self.pwm_feq) #create PWM instance with frequency
         self.r_pi_pwm = GPIO.PWM(self.r_paddle_pin, self.pwm_feq) #create PWM instance with frequency
@@ -30,25 +33,26 @@ class PS4Controller(Controller):
         self.cmd_led_pub_cb = callback_func
 
     def pub_movement(self):
-        self.cmd_vel_pub_cb(self.y, self.x)
+        self.cmd_vel_pub_cb(self.x, self.y)
 
     # Listen
     def spin_controller(self):
-        self.pi_pwm.start(0)				#start PWM of required Duty Cycle 
+        self.l_pi_pwm.start(0)
+        self.r_pi_pwm.start(0)				#start PWM of required Duty Cycle 
         self.listen(on_connect=self.connected, on_disconnect=self.disconnected)
 
     # Controller events
     def on_R3_left(self, value):
-        self.move_robot_X(value)
+        self.move_robot_X(-value)
 
     def on_R3_right(self, value):
-        self.move_robot_X(value)
+        self.move_robot_X(-value)
 
     def on_L3_up(self, value):
-        self.move_robot_Y(value)
+        self.move_robot_Y(-value)
 
     def on_L3_down(self, value):
-        self.move_robot_Y(value)
+        self.move_robot_Y(-value)
 
     def on_L2_press(self, value):
         self.send_pwm_left(value)
@@ -70,7 +74,7 @@ class PS4Controller(Controller):
         return (float(value) / 32767.0) * 0.46
 
     def map_motor(self,value):
-        return abs(float(value) / 32767.0 * 75)
+        return abs(float(value) / 32767.0 * self.pwm_feq)
 
     # Actions
     def move_robot_X(self,value):
