@@ -3,7 +3,8 @@ import pigpio
 import time
 
 GPIO = pigpio.pi()
-
+IOLEFT = 0
+IORIGHT = 0
 
 class PS4Controller(Controller):
     def __init__(self, **kwargs):
@@ -57,18 +58,56 @@ class PS4Controller(Controller):
 
     def on_L2_press(self, value):
         print(f"L2 Raw: {value}")
-        self.send_pwm_left(value)
+        #self.send_pwm_left(value)
+        pass
+
+    def on_L1_press(self): 
+        GPIO.set_mode(self.l_paddle_pin, pigpio.OUTPUT)
+        global IOLEFT
+        print("on_L1_press") 
+        if IOLEFT == 0:
+            GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
+        if IOLEFT == 1:
+            GPIO.set_PWM_dutycycle(self.l_paddle_pin, 255)
+
+    def on_L1_release(self): # stop to motor and IOLEFT to opposite
+        GPIO.set_mode(self.l_paddle_pin, pigpio.INPUT)
+        global IOLEFT
+        if IOLEFT == 0:
+            IOLEFT = 1
+        if IOLEFT == 1:
+            IOLEFT = 0
+
+    def on_R1_press(self): 
+        GPIO.set_mode(self.r_paddle_pin, pigpio.OUTPUT)
+        global IORIGHT
+        print("on_L1_press") 
+        if IORIGHT == 0:
+            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
+        if IORIGHT == 1:
+            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 255)
+
+    def on_R1_release(self): # stop to motor and IOLEFT to opposite
+        GPIO.set_mode(self.r_paddle_pin, pigpio.INPUT)
+        global IORIGHT
+        if IORIGHT == 0:
+            IORIGHT = 1
+        if IORIGHT == 1:
+            IORIGHT = 0  
 
     def on_R2_press(self, value):
         print(f"R2 Raw: {value}")
-        self.send_pwm_right(value)
+        #self.send_pwm_right(value)
+        pass
     
     def on_R2_release(self):
-        GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
+        #GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
+        pass
 
     def on_L2_release(self):
-        GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
-
+        #GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
+        pass
+    
     # def on_L3_y_at_rest(self):
     #     self.move_robot_Y(0)
 
