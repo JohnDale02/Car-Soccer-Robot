@@ -78,15 +78,16 @@ class PS4Controller(Controller):
             IOLEFT = 1
         if IOLEFT == 1:
             IOLEFT = 0
+        print(IOLEFT)
 
     def on_R1_press(self): 
         GPIO.set_mode(self.r_paddle_pin, pigpio.OUTPUT)
         global IORIGHT
         print("on_R1_press: ", IORIGHT) 
         if IORIGHT == 0:
-            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
-        if IORIGHT == 1:
             GPIO.set_PWM_dutycycle(self.r_paddle_pin, 255)
+        if IORIGHT == 1:
+            GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
 
     def on_R1_release(self): # stop to motor and IOLEFT to opposite
         GPIO.set_mode(self.r_paddle_pin, pigpio.INPUT)
@@ -96,6 +97,7 @@ class PS4Controller(Controller):
             IORIGHT = 1
         if IORIGHT == 1:
             IORIGHT = 0  
+        print(IORIGHT)
 
     def on_R2_press(self, value):
         print(f"R2 Raw: {value}")
