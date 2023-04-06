@@ -73,6 +73,7 @@ class PS4Controller(Controller):
     def on_L1_release(self): # stop to motor and IOLEFT to opposite
         GPIO.set_mode(self.l_paddle_pin, pigpio.INPUT)
         global IOLEFT
+        print("L1 Release")
         if IOLEFT == 0:
             IOLEFT = 1
         if IOLEFT == 1:
@@ -81,7 +82,7 @@ class PS4Controller(Controller):
     def on_R1_press(self): 
         GPIO.set_mode(self.r_paddle_pin, pigpio.OUTPUT)
         global IORIGHT
-        print("on_L1_press") 
+        print("on_R1_press") 
         if IORIGHT == 0:
             GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
         if IORIGHT == 1:
@@ -90,6 +91,7 @@ class PS4Controller(Controller):
     def on_R1_release(self): # stop to motor and IOLEFT to opposite
         GPIO.set_mode(self.r_paddle_pin, pigpio.INPUT)
         global IORIGHT
+        print("R1 Release")
         if IORIGHT == 0:
             IORIGHT = 1
         if IORIGHT == 1:
@@ -107,7 +109,7 @@ class PS4Controller(Controller):
     def on_L2_release(self):
         #GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
         pass
-    
+
     # def on_L3_y_at_rest(self):
     #     self.move_robot_Y(0)
 
