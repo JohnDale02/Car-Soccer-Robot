@@ -3,8 +3,7 @@ import pigpio
 import time
 
 GPIO = pigpio.pi()
-IOLEFT = 0
-IORIGHT = 0
+
 
 class PS4Controller(Controller):
     def __init__(self, **kwargs):
@@ -14,6 +13,8 @@ class PS4Controller(Controller):
         self.x = 0
         self.y = 0
         self.pwm_feq = 20000
+        self.IOLEFT = 0
+        self.IORIGHT = 0
 
         self.l_paddle_pin = 12 # set to whatever the left bumper pin is
         self.r_paddle_pin = 13 # set to whatever the right bumper pin is
@@ -63,41 +64,37 @@ class PS4Controller(Controller):
 
     def on_L1_press(self): 
         GPIO.set_mode(self.l_paddle_pin, pigpio.OUTPUT)
-        global IOLEFT
-        print("on_L1_press: ", IOLEFT) 
-        if IOLEFT == 0:
+        print("on_L1_press: ", self.IOLEFT) 
+        if self.IOLEFT == 0:
             GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
-        if IOLEFT == 1:
+        if self.IOLEFT == 1:
             GPIO.set_PWM_dutycycle(self.l_paddle_pin, 255)
 
     def on_L1_release(self): # stop to motor and IOLEFT to opposite
         GPIO.set_mode(self.l_paddle_pin, pigpio.INPUT)
-        global IOLEFT
-        print("L1 Release: ", IOLEFT)
-        if IOLEFT == 0:
-            IOLEFT = 1
-        if IOLEFT == 1:
-            IOLEFT = 0
-        print(IOLEFT)
+        print("L1 Release: ", self.IOLEFT)
+        if self.IOLEFT == 0:
+            self.IOLEFT = 1
+        if self.IOLEFT == 1:
+            self.IOLEFT = 0
+        print(self.IOLEFT)
 
     def on_R1_press(self): 
         GPIO.set_mode(self.r_paddle_pin, pigpio.OUTPUT)
-        global IORIGHT
-        print("on_R1_press: ", IORIGHT) 
-        if IORIGHT == 0:
+        print("on_R1_press: ", self.IORIGHT) 
+        if self.IORIGHT == 0:
             GPIO.set_PWM_dutycycle(self.r_paddle_pin, 255)
-        if IORIGHT == 1:
+        if self.IORIGHT == 1:
             GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
 
     def on_R1_release(self): # stop to motor and IOLEFT to opposite
         GPIO.set_mode(self.r_paddle_pin, pigpio.INPUT)
-        global IORIGHT
-        print("R1 Release: ", IORIGHT)
-        if IORIGHT == 0:
-            IORIGHT = 1
-        if IORIGHT == 1:
-            IORIGHT = 0  
-        print(IORIGHT)
+        print("R1 Release: ", self.IORIGHT)
+        if self.IORIGHT == 0:
+            self.IORIGHT = 1
+        if self.IORIGHT == 1:
+            self.IORIGHT = 0  
+        print(self.IORIGHT)
 
     def on_R2_press(self, value):
         print(f"R2 Raw: {value}")
