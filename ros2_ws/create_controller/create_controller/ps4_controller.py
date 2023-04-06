@@ -64,10 +64,10 @@ class PS4Controller(Controller):
         self.send_pwm_right(value)
     
     def on_R2_release(self):
-        GPIO.set_PWM_dutycycle(self.r_paddle_pin, 190)
+        GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
 
     def on_L2_release(self):
-        GPIO.set_PWM_dutycycle(self.l_paddle_pin, 190)
+        GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
 
     # def on_L3_y_at_rest(self):
     #     self.move_robot_Y(0)
@@ -83,8 +83,8 @@ class PS4Controller(Controller):
         return (float(value) / 32767.0) * 0.46
 
     def map_motor(self,value):
-        value = int((((float(value) + 32767.0) // 256)+ 190) * .573)
-        print("NEW VALUE 190-255: ", value, "\n")
+        value = (float(value) + 32767.0) // 256
+        print(value, "\n")
         return value
 
     # Actions
