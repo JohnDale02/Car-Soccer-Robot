@@ -56,9 +56,11 @@ class PS4Controller(Controller):
         self.move_robot_Y(-value)
 
     def on_L2_press(self, value):
+        print(f"L2 Raw: {value}")
         self.send_pwm_left(value)
 
     def on_R2_press(self, value):
+        print(f"R2 Raw: {value}")
         self.send_pwm_right(value)
 
     # def on_L3_y_at_rest(self):
@@ -75,7 +77,7 @@ class PS4Controller(Controller):
         return (float(value) / 32767.0) * 0.46
 
     def map_motor(self,value):
-        value = abs(float(value) / 32767.0 * 255)
+        value = float(value) / 32767.0 * 255
         print(value, "\n")
         return value
 
