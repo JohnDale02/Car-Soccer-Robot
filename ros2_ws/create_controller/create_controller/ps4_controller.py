@@ -77,7 +77,7 @@ class PS4Controller(Controller):
         return (float(value) / 32767.0) * 0.46
 
     def map_motor(self,value):
-        value = float(value) / 32767.0 * 255
+        value = (float(value) + 32767.0) // 256
         print(value, "\n")
         return value
 
@@ -90,19 +90,18 @@ class PS4Controller(Controller):
     def move_robot_Y(self,value):
         self.y = self.map_movement(value)
         print(f"Y: {self.y}")
-
         self.pub_movement()
 
     def send_pwm_left(self,value):		# Function to send PWM FLIPPER signals to GPIO pin for Flipper on left (PIN y)
         value = self.map_motor(value)
         print(f"LT duty value: {value}")
-        #GPIO.set_PWM_dutycycle(self.l_paddle_pin, value)
+        GPIO.set_PWM_dutycycle(self.l_paddle_pin, value)
 
 
     def send_pwm_right(self,value):		# Function to send PWM FLIPPER signals to GPIO pin for Flipper on right(PIN x)
         value = self.map_motor(value)
         print(f"RT duty value: {value}")
-        #GPIO.set_PWM_dutycycle(self.r_paddle_pin, value)
+        GPIO.set_PWM_dutycycle(self.r_paddle_pin, value)
     
     def reset_flippers(self):  # Function to slowly rotate flippers back so they can synchronize for next shot (Good for Accuracy)
         pass
