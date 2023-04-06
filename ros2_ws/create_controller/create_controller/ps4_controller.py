@@ -74,8 +74,10 @@ class PS4Controller(Controller):
         GPIO.set_mode(self.l_paddle_pin, pigpio.INPUT)
         print("L1 Release: ", self.IOLEFT)
         if self.IOLEFT == 0:
+            print("IN 0")
             self.IOLEFT = 1
         if self.IOLEFT == 1:
+            print("In 1")
             self.IOLEFT = 0
         print(self.IOLEFT)
 
@@ -91,8 +93,10 @@ class PS4Controller(Controller):
         GPIO.set_mode(self.r_paddle_pin, pigpio.INPUT)
         print("R1 Release: ", self.IORIGHT)
         if self.IORIGHT == 0:
+            print("IN 0")
             self.IORIGHT = 1
         if self.IORIGHT == 1:
+            print("In 1")
             self.IORIGHT = 0  
         print(self.IORIGHT)
 
