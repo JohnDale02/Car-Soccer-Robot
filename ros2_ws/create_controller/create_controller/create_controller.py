@@ -32,7 +32,7 @@ class CreateControllerPub(Node):
         
     def start_up_controller(self):
         self.controller.register_cmd_vel_pub_cb(self.publish_twist_msg)
-        self.controller.register_cmd_led_pub_cb(self.toggle_rainbow)
+#        self.controller.register_cmd_led_pub_cb(self.toggle_rainbow)
         self.ct = threading.Thread(target=self.controller.spin_controller)
         self.ct.start()
     

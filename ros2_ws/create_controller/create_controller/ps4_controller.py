@@ -1,9 +1,9 @@
 from pyPS4Controller.controller import Controller
-import RPi.GPIO as GPIO
+import pigpio
 import time
 
-GPIO.setwarnings(False)			#disable warnings
-GPIO.setmode(GPIO.BOARD)		#set pin numbering system
+GPIO = pigpio.pi()
+
 
 class PS4Controller(Controller):
     def __init__(self, **kwargs):
@@ -12,33 +12,34 @@ class PS4Controller(Controller):
         self.cmd_led_pub_cb = None
         self.x = 0
         self.y = 0
-        self.pwm_feq = 150
+        self.pwm_feq = 20000
 
         self.l_paddle_pin = 12 # set to whatever the left bumper pin is
         self.r_paddle_pin = 13 # set to whatever the right bumper pin is
+        GPIO.set_mode(self.l_paddle_pin, pigpio.OUTPUT)
+        GPIO.set_mode(self.r_paddle_pin, pigpio.OUTPUT)
 
-        GPIO.setup(self.l_paddle_pin,GPIO.OUT)
-        GPIO.setup(self.r_paddle_pin, GPIO.OUT)
-        # pwm
-        self.pwm_feq = 100 # set desired frequency, range [10-150Hz]
-        self.l_pi_pwm = GPIO.PWM(self.l_paddle_pin, self.pwm_feq) #create PWM instance with frequency
-        self.r_pi_pwm = GPIO.PWM(self.r_paddle_pin, self.pwm_feq) #create PWM instance with frequency
+        GPIO.hardware_PWM(self.l_paddle_pin, self.pwm_feq, 0)
+        GPIO.hardware_PWM(self.r_paddle_pin, self.pwm_feq, 0)
+
+        GPIO.set_PWM_frequency(self.l_paddle_pin, self.pwm_feq)
+        GPIO.set_PWM_frequency(self.r_paddle_pin, self.pwm_feq)
+        GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
+        GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
 
     
     # ROS callbacks
     def register_cmd_vel_pub_cb(self, callback_func):
         self.cmd_vel_pub_cb = callback_func
     
-    def register_cmd_led_pub_cb(self, callback_func):
-        self.cmd_led_pub_cb = callback_func
+ #   def register_cmd_led_pub_cb(self, callback_func):
+#        self.cmd_led_pub_cb = callback_func
 
     def pub_movement(self):
-        self.cmd_vel_pub_cb(self.x, self.y)
+        self.cmd_vel_pub_cb(self.y, self.x)
 
     # Listen
     def spin_controller(self):
-        self.l_pi_pwm.start(0)
-        self.r_pi_pwm.start(0)				#start PWM of required Duty Cycle 
         self.listen(on_connect=self.connected, on_disconnect=self.disconnected)
 
     # Controller events
@@ -66,15 +67,17 @@ class PS4Controller(Controller):
     # def on_R3_x_at_rest(self):
     #     self.move_robot_X(0)
     
-    def on_x_press(self):
-        self.cmd_led_pub_cb()
+   # def on_x_press(self):
+    #    self.cmd_led_pub_cb()
     
     # Mapping
     def map_movement(self,value):  # function that maps raw joystick data  --> create angle
         return (float(value) / 32767.0) * 0.46
 
     def map_motor(self,value):
-        return abs(float(value) / 32767.0 * self.pwm_feq)
+        value = abs(float(value) / 32767.0 * 255)
+        print(value, "\n")
+        return value
 
     # Actions
     def move_robot_X(self,value):
@@ -85,18 +88,19 @@ class PS4Controller(Controller):
     def move_robot_Y(self,value):
         self.y = self.map_movement(value)
         print(f"Y: {self.y}")
+
         self.pub_movement()
 
     def send_pwm_left(self,value):		# Function to send PWM FLIPPER signals to GPIO pin for Flipper on left (PIN y)
         value = self.map_motor(value)
         print(f"LT duty value: {value}")
-        self.l_pi_pwm.ChangeDutyCycle(value)
+        GPIO.set_PWM_dutycycle(self.l_paddle_pin, value)
 
 
     def send_pwm_right(self,value):		# Function to send PWM FLIPPER signals to GPIO pin for Flipper on right(PIN x)
         value = self.map_motor(value)
         print(f"RT duty value: {value}")
-        self.r_pi_pwm.ChangeDutyCycle(value)
+        GPIO.set_PWM_dutycycle(self.r_paddle_pin, value)
     
     def reset_flippers(self):  # Function to slowly rotate flippers back so they can synchronize for next shot (Good for Accuracy)
         pass
