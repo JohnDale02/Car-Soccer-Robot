@@ -55,10 +55,6 @@ class PS4Controller(Controller):
             print("Turning left")
             self.x = 0.7
 
-    def on_left_arrow_release(self):
-        print("Stopping Left")
-        self.x = 0.0
-
     def on_R3_right(self, value):
         if self.MarioMode == False:
             self.x = -.7
@@ -68,8 +64,8 @@ class PS4Controller(Controller):
             print("Turning right")
             self.x = -0.7
     
-    def on_right_arrow_release(self):
-        print("Stopping Right")
+    def on_left_right_arrow_release(self):
+        print("Stopping Turn")
         self.x = 0.0
 
     def on_L3_up(self, value):
