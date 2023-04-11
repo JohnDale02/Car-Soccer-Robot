@@ -142,9 +142,11 @@ class PS4Controller(Controller):
     def on_triangle_press(self):
         if self.MarioMode == True:
             self.MarioMode = False
+            time.sleep(2)
             print("Mario Mode disabled")
         if self.MarioMode == False:
             self.MarioMode = True
+            time.sleep(2)
             print("Mario Mode enabled")
     
     def on_circle_press(self):
