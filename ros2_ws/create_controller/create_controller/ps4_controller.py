@@ -15,6 +15,7 @@ class PS4Controller(Controller):
         self.pwm_feq = 20000
         self.IOLEFT = 0
         self.IORIGHT = 0
+        self.MarioMode = True
 
         self.l_paddle_pin = 12 # set to whatever the left bumper pin is
         self.r_paddle_pin = 13 # set to whatever the right bumper pin is
@@ -46,16 +47,34 @@ class PS4Controller(Controller):
 
     # Controller events
     def on_R3_left(self, value):
-        self.move_robot_X(-value)
+        if self.MarioMode == False:
+            self.move_robot_X(-value)
+
+    def on_left_arrow_press(self):
+        if self.MarioMode == True:
+            self.move_robot_X(-32767.0)
+
+    def on_left_arrow_release(self):
+        self.x = 0
 
     def on_R3_right(self, value):
-        self.move_robot_X(-value)
+        if self.MarioMode == False:
+            self.move_robot_X(-value)
+        
+    def on_right_arrow_press(self):
+        if self.MarioMode == True:
+            self.move_robot_X(32767.0)
+    
+    def on_right_arrow_release(self):
+        self.x = 0
 
     def on_L3_up(self, value):
-        self.move_robot_Y(-value)
+        if self.MarioMode == False:
+            self.move_robot_Y(-value)
 
     def on_L3_down(self, value):
-        self.move_robot_Y(-value)
+        if self.MarioMode == False:
+            self.move_robot_Y(-value)
 
     def on_L2_press(self, value):
         print(f"L2 Raw: {value}")
@@ -113,13 +132,32 @@ class PS4Controller(Controller):
         pass
 
     def on_L3_y_at_rest(self):
-        self.y = 0
+        if self.MarioMode == False:
+            self.y = 0
 
     def on_R3_x_at_rest(self):
-        self.x = 0
+        if self.MarioMode == False:
+            self.x = 0
+
+    def on_triangle_press(self):
+        if self.MarioMode == True:
+            self.MarioMode == False
+        if self.MarioMode == False:
+            self.MarioMode == True
     
-    #def on_x_press(self):
-        #self.cmd_led_pub_cb()
+    def on_circle_press(self):
+        if self.MarioMode == True:
+            self.y = self.move_robot_Y(32767.0) # go full speed forwards
+
+    def on_circle_release(self):
+        self.y = 0
+
+    def on_x_press(self):
+        if self.MarioMode == True:
+            self.y = self.move_robot_Y(-32767.0)  # Go max speed backwards
+
+    def on_x_release(self):
+        self.y = 0
     
     # Mapping
     def map_movement(self,value):  # function that maps raw joystick data  --> create angle
