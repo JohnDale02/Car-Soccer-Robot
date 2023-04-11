@@ -59,11 +59,11 @@ class PS4Controller(Controller):
 
     def on_R3_right(self, value):
         if self.MarioMode == False:
-            self.move_robot_X(-value)
+            self.x = -.7
         
     def on_right_arrow_press(self):
         if self.MarioMode == True:
-            self.move_robot_X(32767.0)
+            self.x = .7
     
     def on_right_arrow_release(self):
         self.x = 0
@@ -133,31 +133,33 @@ class PS4Controller(Controller):
 
     def on_L3_y_at_rest(self):
         if self.MarioMode == False:
-            self.y = 0
+            self.y = 0.0
 
     def on_R3_x_at_rest(self):
         if self.MarioMode == False:
-            self.x = 0
+            self.x = 0.0
 
     def on_triangle_press(self):
         if self.MarioMode == True:
             self.MarioMode == False
+            print("Mario Mode disabled")
         if self.MarioMode == False:
             self.MarioMode == True
+            print("Mario Mode enabled")
     
     def on_circle_press(self):
         if self.MarioMode == True:
-            self.y = self.move_robot_Y(32767.0) # go full speed forwards
+            self.y = 0.46 # go full speed forwards
 
     def on_circle_release(self):
-        self.y = 0
+        self.y = 0.0
 
     def on_x_press(self):
         if self.MarioMode == True:
-            self.y = self.move_robot_Y(-32767.0)  # Go max speed backwards
+            self.y = -0.46  # Go max speed backwards
 
     def on_x_release(self):
-        self.y = 0
+        self.y = 0.0
     
     # Mapping
     def map_movement(self,value):  # function that maps raw joystick data  --> create angle
