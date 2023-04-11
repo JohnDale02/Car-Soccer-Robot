@@ -29,6 +29,12 @@ class CreateControllerPub(Node):
         self.led_msg.override_system = True
 
         self.controller = controller
+        self.timer = self.create_timer(.02, self.timer_callback)
+        #function to publish movement every .02 second or 50x a second
+
+    def timer_callback(self):
+        self.controller.pub_movement()
+
         
     def start_up_controller(self):
         self.controller.register_cmd_vel_pub_cb(self.publish_twist_msg)
@@ -84,6 +90,7 @@ def main():
     )
     create_controller_pub = CreateControllerPub(controller)
     create_controller_pub.start_up_controller()
+
     rclpy.spin(create_controller_pub)
 
     create_controller_pub.destroy_node()
