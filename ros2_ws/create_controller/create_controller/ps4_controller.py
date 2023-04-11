@@ -52,10 +52,12 @@ class PS4Controller(Controller):
 
     def on_left_arrow_press(self):
         if self.MarioMode == True:
-            self.move_robot_X(-32767.0)
+            print("Turning left")
+            self.x = 0.7
 
     def on_left_arrow_release(self):
-        self.x = 0
+        print("Stopping Left")
+        self.x = 0.0
 
     def on_R3_right(self, value):
         if self.MarioMode == False:
@@ -63,10 +65,12 @@ class PS4Controller(Controller):
         
     def on_right_arrow_press(self):
         if self.MarioMode == True:
-            self.x = .7
+            print("Turning right")
+            self.x = -0.7
     
     def on_right_arrow_release(self):
-        self.x = 0
+        print("Stopping Right")
+        self.x = 0.0
 
     def on_L3_up(self, value):
         if self.MarioMode == False:
