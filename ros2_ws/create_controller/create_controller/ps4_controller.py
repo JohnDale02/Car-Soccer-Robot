@@ -34,9 +34,6 @@ class PS4Controller(Controller):
     # ROS callbacks
     def register_cmd_vel_pub_cb(self, callback_func):
         self.cmd_vel_pub_cb = callback_func
-    
- #   def register_cmd_led_pub_cb(self, callback_func):
-#        self.cmd_led_pub_cb = callback_func
 
     def pub_movement(self):
         self.cmd_vel_pub_cb(self.y, self.x)
@@ -76,11 +73,6 @@ class PS4Controller(Controller):
         if self.MarioMode == False:
             self.move_robot_Y(-value)
 
-    def on_L2_press(self, value):
-        print(f"L2 Raw: {value}")
-        #self.send_pwm_left(value)
-        pass
-
     def on_L1_press(self): 
         GPIO.set_mode(self.l_paddle_pin, pigpio.OUTPUT)
         print("on_L1_press: ", self.IOLEFT) 
@@ -117,19 +109,6 @@ class PS4Controller(Controller):
             GPIO.set_PWM_dutycycle(self.r_paddle_pin, 170)
             self.IORIGHT = 0  
         print(self.IORIGHT)
-
-    def on_R2_press(self, value):
-        print(f"R2 Raw: {value}")
-        #self.send_pwm_right(value)
-        pass
-    
-    def on_R2_release(self):
-        #GPIO.set_PWM_dutycycle(self.r_paddle_pin, 0)
-        pass
-
-    def on_L2_release(self):
-        #GPIO.set_PWM_dutycycle(self.l_paddle_pin, 0)
-        pass
 
     def on_L3_y_at_rest(self):
         if self.MarioMode == False:
@@ -189,14 +168,10 @@ class PS4Controller(Controller):
         print(f"LT duty value: {value}")
         GPIO.set_PWM_dutycycle(self.l_paddle_pin, value)
 
-
     def send_pwm_right(self,value):		# Function to send PWM FLIPPER signals to GPIO pin for Flipper on right(PIN x)
         value = self.map_motor(value)
         print(f"RT duty value: {value}")
         GPIO.set_PWM_dutycycle(self.r_paddle_pin, value)
-    
-    def reset_flippers(self):  # Function to slowly rotate flippers back so they can synchronize for next shot (Good for Accuracy)
-        pass
     
     # Connect/Disconnect
     def connected(self):
